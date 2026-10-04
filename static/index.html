@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exchange</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div id="join" class="center-card" hidden>
+  <div class="panel">
+    <h1>Join the game</h1>
+    <form id="join-form">
+      <input id="join-code" placeholder="Join code" autocomplete="off" autocapitalize="characters" required>
+      <input id="join-name" placeholder="Display name" maxlength="24" autocomplete="nickname" required>
+      <button class="primary" type="submit">Join</button>
+    </form>
+  </div>
+</div>
+
+<div id="app" hidden>
+  <header class="top">
+    <span class="brand"><span id="conn" class="dot"></span><span id="sess-code"></span></span>
+    <span class="stat"><small>Player</small><b id="me-name"></b></span>
+    <span class="stat"><small>Cash</small><b id="me-cash"></b></span>
+    <span class="stat"><small>Available</small><b id="me-avail"></b></span>
+    <span class="stat"><small>P&amp;L</small><b id="me-pnl"></b></span>
+    <span class="spacer"></span>
+    <button id="cancel-everything">Cancel all orders</button>
+  </header>
+  <div id="ended" class="banner" hidden>This session has ended. Everything is read-only.</div>
+
+  <main class="grid">
+    <div class="col">
+      <section class="panel">
+        <div id="tabs" class="tabs"></div>
+        <div id="contract-view"></div>
+      </section>
+      <section class="panel">
+        <h2>My open orders</h2>
+        <div class="scroll h" id="my-orders"></div>
+      </section>
+    </div>
+    <div class="col">
+      <section class="panel">
+        <h2>Announcements</h2>
+        <ul class="feed scroll h" id="announcements"></ul>
+      </section>
+      <section class="panel">
+        <h2>My positions</h2>
+        <div id="my-positions"></div>
+      </section>
+      <section class="panel">
+        <h2>Leaderboard <span class="right muted" id="lb-note"></span></h2>
+        <div id="leaderboard"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<template id="contract-tpl">
+  <div class="contract-head">
+    <h1 data-f="name"></h1>
+    <span data-f="meta" class="muted"></span>
+  </div>
+  <p data-f="desc" class="muted" style="margin:0 0 10px"></p>
+  <div class="trade-area">
+    <div class="ladder-box">
+      <div class="scroll" style="max-height:440px">
+        <table class="ladder">
+          <thead><tr><th>Bid size</th><th>Price</th><th>Ask size</th></tr></thead>
+          <tbody data-f="ladder"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="entry">
+      <div class="lastbox"><span>Last <b data-f="last" class="num"></b></span><span>Mid <b data-f="mid" class="num"></b></span></div>
+      <div class="row">
+        <label>Price<input data-f="price" type="number" inputmode="numeric"></label>
+        <label>Qty<input data-f="qty" type="number" inputmode="numeric" min="1" value="1"></label>
+      </div>
+      <label class="chk"><input data-f="ioc" type="checkbox"> IOC (fill now or cancel)</label>
+      <div class="row">
+        <button class="buy" data-act="buy">Buy</button>
+        <button class="sell" data-act="sell">Sell</button>
+      </div>
+      <div class="row">
+        <button data-act="mkt-buy">Market buy</button>
+        <button data-act="mkt-sell">Market sell</button>
+      </div>
+      <button data-act="cancel-contract">Cancel my orders here</button>
+    </div>
+    <div class="tape">
+      <h2>Trades</h2>
+      <div class="scroll" style="max-height:200px"><table><tbody data-f="tape"></tbody></table></div>
+    </div>
+  </div>
+</template>
+
+<script src="/static/common.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

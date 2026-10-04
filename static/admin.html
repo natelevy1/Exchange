@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exchange admin</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div id="login" class="center-card" hidden>
+  <div class="panel">
+    <h1>Admin</h1>
+    <form id="login-form">
+      <input id="password" type="password" placeholder="Admin password" autocomplete="current-password" required>
+      <button class="primary" type="submit">Log in</button>
+    </form>
+  </div>
+</div>
+
+<div id="app" hidden>
+  <header class="top">
+    <span class="brand"><span id="conn" class="dot"></span>Exchange admin</span>
+    <label class="stat"><small>Session</small><select id="session-select"></select></label>
+    <span class="stat"><small>Join code</small><b id="join-code">–</b></span>
+    <span class="stat"><small>Status</small><b id="sess-status">–</b></span>
+    <span class="spacer"></span>
+    <button id="end-session" hidden>End session</button>
+    <button id="logout" class="link">Log out</button>
+  </header>
+
+  <section id="new-session" class="panel" style="margin:12px 16px" hidden>
+    <h2>Start a new session</h2>
+    <form id="session-form" class="inline">
+      <label>Join code<input id="ns-code" required maxlength="20" autocapitalize="characters"></label>
+      <label>Starting cash<input id="ns-cash" type="number" value="10000" min="1" required></label>
+      <button class="primary" type="submit">Create session</button>
+    </form>
+  </section>
+
+  <main class="grid" id="session-view" hidden>
+    <div class="col">
+      <section class="panel" id="contract-editor">
+        <h2 id="ce-title">New contract</h2>
+        <form id="contract-form" class="inline">
+          <label>Name<input id="ce-name" required maxlength="40"></label>
+          <label style="flex:1 1 220px">Description<input id="ce-desc"></label>
+          <label>Type<select id="ce-kind"><option value="binary">binary</option><option value="numeric">numeric</option></select></label>
+          <label>Min<input id="ce-min" type="number" value="0"></label>
+          <label>Max<input id="ce-max" type="number" value="100"></label>
+          <label>Tick<input id="ce-tick" type="number" value="1" min="1"></label>
+          <button class="primary" type="submit" id="ce-submit">Create</button>
+          <button type="button" id="ce-cancel" hidden>Cancel edit</button>
+        </form>
+      </section>
+      <section class="panel">
+        <h2>Contracts</h2>
+        <div class="scroll" id="contracts"></div>
+      </section>
+      <section class="panel">
+        <h2>Players</h2>
+        <div class="scroll" id="players"></div>
+      </section>
+      <section class="panel">
+        <h2>Open orders</h2>
+        <div class="scroll h" id="open-orders"></div>
+      </section>
+      <section class="panel">
+        <h2>Order log <span class="right muted">latest 200</span></h2>
+        <div class="scroll h" id="order-log"></div>
+      </section>
+    </div>
+    <div class="col">
+      <section class="panel" id="announce-panel">
+        <h2>Announce</h2>
+        <form id="announce-form" class="inline">
+          <input id="ann-text" placeholder="e.g. Die 2: 4" maxlength="500" style="flex:1" required>
+          <button class="primary" type="submit">Post</button>
+        </form>
+      </section>
+      <section class="panel">
+        <h2>Announcements</h2>
+        <ul class="feed scroll h" id="announcements"></ul>
+      </section>
+      <section class="panel">
+        <h2>Leaderboard <span class="right muted" id="lb-note"></span></h2>
+        <div id="leaderboard"></div>
+      </section>
+      <section class="panel">
+        <h2>Export CSV</h2>
+        <div class="inline" style="display:flex;gap:8px;flex-wrap:wrap">
+          <button data-export="trades">Trades</button>
+          <button data-export="orders">Orders</button>
+          <button data-export="results">Final results</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="/static/common.js"></script>
+<script src="/static/admin.js"></script>
+</body>
+</html>
