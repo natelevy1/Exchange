@@ -16,6 +16,34 @@ ADMIN_PASSWORD=changeme .venv/bin/uvicorn app.main:app_from_env --factory --port
 
 Data goes to `exchange.db`, or to the path in `DB_PATH`. Restarting the server keeps everything: books, cash, positions and history are reloaded from SQLite.
 
+## Run a live game from your laptop (free)
+
+A free [Cloudflare quick tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/) gives the laptop server a public HTTPS link that players can open from any network, including mobile data. No account or hosting is needed. One-time install: `brew install cloudflared`.
+
+Use three terminals:
+
+```bash
+# 1. the server
+ADMIN_PASSWORD=changeme .venv/bin/uvicorn app.main:app_from_env --factory --port 8000
+
+# 2. the tunnel
+cloudflared tunnel --url http://localhost:8000 --protocol http2
+
+# 3. keep the laptop awake for the whole game
+caffeinate -i
+```
+
+When terminal 2 prints `Registered tunnel connection`, the tunnel is ready. Give players the `https://<random-words>.trycloudflare.com` link it printed, and open the same link plus `/admin` yourself.
+
+- **`--protocol http2`** makes the tunnel use TCP. Without it, `cloudflared` tries QUIC (UDP) first, and on networks that block UDP (common on campus and office Wi-Fi) it hangs without ever printing a link.
+- **The link changes** every time `cloudflared` restarts, so send the new one before each game.
+- **The laptop must stay on and online.** If the tunnel drops, restart it and send the new link. Players' pages reconnect on their own, and no game data is lost.
+- **Shutting down:** press Ctrl+C in each terminal, or run `pkill -f cloudflared` and `pkill -f "uvicorn app.main"`. Data stays in `exchange.db` for next time.
+
+Quick tunnels come with no uptime guarantee, which is fine for a 30–90 minute game. For a permanent link that doesn't depend on your laptop, see [Deploy](#deploy).
+
+If every device is on the same Wi-Fi, you can skip the tunnel. Start the server with `--host 0.0.0.0` and have players open `http://<laptop IP>:8000`, where `ipconfig getifaddr en0` prints the laptop's IP. This often fails on campus Wi-Fi that blocks devices from reaching each other.
+
 ## Tests and simulation
 
 ```bash
